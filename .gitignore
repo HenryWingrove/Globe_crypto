@@ -1,0 +1,32 @@
+#  Ignore all files in the root of the project
+# Node.js dependencies
+node_modules/
+
+# Build output
+dist/
+build/
+
+# Logs
+logs/
+*.log
+
+# Temporary files
+tmp/
+temp/
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Environment variables
+.env
+
+# IDE files
+.vscode/
+.idea/
+
+# Coverage directory used by testing tools
+coverage/
+
+# Ignore specific files
+crypto_orderbook.db

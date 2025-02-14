@@ -1,0 +1,312 @@
+body {
+    margin: 0;
+    overflow: hidden;
+    background-color: #000;
+    color: white;
+    font-family: Arial, sans-serif;
+}
+
+#globe-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+#info-panel {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background-color: rgba(0, 0, 0, 0.8);
+    padding: 20px;
+    border-radius: 10px;
+    max-width: 300px;
+    z-index: 1000;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+#exchange-data {
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.exchange-tooltip {
+    position: absolute;
+    background-color: rgba(0, 0, 0, 0.9);
+    color: white;
+    padding: 5px 8px;
+    border-radius: 3px;
+    font-size: 10px;
+    pointer-events: none;
+    z-index: 1000;
+    display: none;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    white-space: nowrap;
+}
+
+.exchange-price {
+    margin-bottom: 15px;
+    padding: 10px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 5px;
+}
+
+.exchange-price h3 {
+    margin: 0 0 5px 0;
+    color: #FF4B4B;
+}
+
+.mapboxgl-popup {
+    max-width: 200px;
+}
+
+.mapboxgl-popup-content {
+    background-color: rgba(0, 0, 0, 0.9);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 15px;
+}
+
+.exchange-marker {
+    background-color: #FF4B4B;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: 1px solid white;
+    box-shadow: 0 0 5px rgba(255, 75, 75, 0.5);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.exchange-marker:hover {
+    transform: scale(1.3);
+    z-index: 1000;
+}
+
+#order-book-panel {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    background-color: rgba(0, 0, 0, 0.9);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    padding: 20px;
+    color: white;
+    width: 300px;
+    z-index: 1000;
+    backdrop-filter: blur(10px);
+
+    /* Set maximum height and enable vertical scrolling */
+    max-height: 62vh;      /* Adjusts the vertical size */
+    overflow-y: auto;      /* Enables vertical scroll when needed */
+
+    /* Firefox scrollbar styling */
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.5) transparent;
+}
+
+/* For WebKit-based browsers (Chrome, Safari, Edge) */
+#order-book-panel::-webkit-scrollbar {
+    width: 6px;  /* Adjust the width as needed */
+}
+
+#order-book-panel::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+#order-book-panel::-webkit-scrollbar-thumb {
+    background-color: rgba(255, 255, 255, 0.5); /* Thumb color */
+    border-radius: 3px; /* Rounded corners */
+}
+
+.order-book-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.close-button {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+.order-book-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-top: 15px;
+}
+
+.order-book-content h3 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    font-size: 1em;
+    color: #888;
+}
+
+.order-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 4px 0;
+    font-family: monospace;
+    font-size: 0.9em;
+}
+
+.bids .price {
+    color: #00ff00;
+}
+
+.asks .price {
+    color: #ff4444;
+}
+
+.size {
+    color: #888;
+}
+
+.timestamp {
+    font-size: 0.8em;
+    color: #666;
+    text-align: center;
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.error {
+    color: #ff4444;
+    text-align: center;
+    padding: 20px;
+}
+
+.order-book-histogram {
+    width: 100%;
+    height: 100%;
+    background: none;
+    padding: 0;
+}
+
+/* Remove the old histogram styles */
+.histogram-bar,
+.bid-bar,
+.ask-bar,
+.price-label {
+    display: none;
+}
+
+.order-book-panel {
+    max-height: none;
+    overflow-y: visible;
+}
+
+/* Add styles for the depth chart panel */
+#depth-chart-panel {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    right: 20px;
+    height: 200px;
+    background-color: rgba(0, 0, 0, 0.9);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    padding: 20px;
+    color: white;
+    z-index: 1000;
+    backdrop-filter: blur(10px);
+    display: none;
+    box-sizing: border-box; /* This ensures padding is included in height */
+}
+
+.token-selector {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.token-button {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: white;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.token-button:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.token-button.active {
+    background: #FF4B4B;
+    border-color: #FF4B4B;
+} 
+
+/* Assuming your token selector is within an element with class "token-selector" */
+.token-selector {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Exchange Selector Container */
+#exchange-selector {
+    margin-top: 10px;
+    padding: 10px;
+    background-color: rgba(0, 0, 0, 0.8);
+    border-radius: 5px;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+/* Individual exchange items */
+.exchange-selector-item {
+    padding: 8px;
+    cursor: pointer;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    transition: background-color 0.3s ease;
+}
+
+.exchange-selector-item:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Exchange Selector Container (already defined) */
+#exchange-selector {
+    margin-top: 10px;
+    padding: 10px;
+    background-color: rgba(0, 0, 0, 0.8);
+    border-radius: 5px;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+/* Firefox scrollbar styling for the exchange selector */
+#exchange-selector {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.5) transparent;
+}
+
+/* WebKit browsers (Chrome, Safari, Edge) */
+#exchange-selector::-webkit-scrollbar {
+    width: 6px; /* Adjust as needed */
+}
+
+#exchange-selector::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+#exchange-selector::-webkit-scrollbar-thumb {
+    background-color: rgba(255, 255, 255, 0.5); /* Thumb color */
+    border-radius: 3px; /* Rounded corners */
+}

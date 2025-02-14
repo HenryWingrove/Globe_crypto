@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crypto Globe</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+</head>
+<body>
+    <h1>Crypto Globe</h1>
+    <div id="globe-container"></div>
+    <div id="info-panel">
+        <div class="token-selector">
+            <button class="token-button active" data-token="BTC">BTC</button>
+            <button class="token-button" data-token="ETH">ETH</button>
+            <button class="token-button" data-token="SOL">SOL</button>
+            <button class="token-button" data-token="XRP">XRP</button>
+        </div>
+        <div id="exchange-data"></div>
+    </div>
+    
+    <script src="{{ url_for('static', filename='js/globe.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html> 
