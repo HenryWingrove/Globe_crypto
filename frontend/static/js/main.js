@@ -277,66 +277,70 @@ document.addEventListener('DOMContentLoaded', () => {
     function drawHistogram(histogramData, containerId) {
         const container = document.getElementById(containerId);
         container.innerHTML = '';
-        
+    
         const canvas = document.createElement('canvas');
         canvas.style.width = '100%';
         canvas.style.height = '100%';
         canvas.width = container.clientWidth;
         canvas.height = container.clientHeight;
         container.appendChild(canvas);
-        
+    
         const ctx = canvas.getContext('2d');
         const prices = Object.keys(histogramData).map(Number).sort((a, b) => a - b);
-        
-        // Filter prices with non-zero volumes
+    
+        // Get bid and ask prices with volume
         const bidPricesWithVolume = prices.filter(p => histogramData[p].bidVolume > 0);
         const askPricesWithVolume = prices.filter(p => histogramData[p].askVolume > 0);
-        
-        // Calculate best bid (maximum) and best ask (minimum)
+    
+        // Calculate best bid (maximum bid) and best ask (minimum ask)
         const bestBid = bidPricesWithVolume.length > 0 ? Math.max(...bidPricesWithVolume) : 0;
         const bestAsk = askPricesWithVolume.length > 0 ? Math.min(...askPricesWithVolume) : 0;
         const midPrice = (bestBid + bestAsk) / 2;
-        
+    
         const maxVolume = Math.max(...Object.values(histogramData).map(bin => 
             Math.max(Math.log10(bin.bidVolume + 1), Math.log10(bin.askVolume + 1))
         ));
-        
+    
         const margin = {
             top: 20,
             right: 50,
             bottom: 70,
             left: 60
         };
-        
+    
         const plotWidth = canvas.width - margin.left - margin.right;
         const plotHeight = canvas.height - margin.top - margin.bottom;
-        
+    
         ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
+        // Draw axes
         ctx.strokeStyle = '#444';
         ctx.beginPath();
         ctx.moveTo(margin.left, margin.top);
         ctx.lineTo(margin.left, canvas.height - margin.bottom);
         ctx.lineTo(canvas.width - margin.right, canvas.height - margin.bottom);
         ctx.stroke();
-        
+    
         const barWidth = Math.min(15, plotWidth / prices.length);
-        
+    
+        // Draw histogram bars
         prices.forEach((price, i) => {
             const x = margin.left + (i * (plotWidth / (prices.length - 1)));
             const y = canvas.height - margin.bottom;
             const { bidVolume, askVolume } = histogramData[price];
-            
+    
             if (price <= midPrice && bidVolume > 0) {
                 ctx.fillStyle = 'rgba(0, 255, 0, 0.5)';
                 const height = (Math.log10(bidVolume + 1) / maxVolume) * plotHeight;
-                ctx.fillRect(x - barWidth/2, y - height, barWidth, height);
+                ctx.fillRect(x - barWidth / 2, y - height, barWidth, height);
             }
             if (price >= midPrice && askVolume > 0) {
                 ctx.fillStyle = 'rgba(255, 0, 0, 0.5)';
                 const height = (Math.log10(askVolume + 1) / maxVolume) * plotHeight;
-                ctx.fillRect(x - barWidth/2, y - height, barWidth, height);
+                ctx.fillRect(x - barWidth / 2, y - height, barWidth, height);
             }
-            
+    
+            // X-axis labels (prices)
             if (i % Math.ceil(prices.length / 20) === 0) {
                 ctx.save();
                 ctx.fillStyle = '#888';
@@ -344,23 +348,44 @@ document.addEventListener('DOMContentLoaded', () => {
                 ctx.textAlign = 'right';
                 ctx.translate(x, y + 25);
                 ctx.rotate(-Math.PI / 4);
-                ctx.fillText(price.toLocaleString(undefined, {
-                    minimumFractionDigits: currentToken === 'XRP' ? 4 : 2,
-                    maximumFractionDigits: currentToken === 'XRP' ? 4 : 2
-                }), 0, 0);
+                ctx.fillText(price.toFixed(2), 0, 0);
                 ctx.restore();
             }
         });
-        
+    
+        // --- Midprice Tick on X-axis ---
+        if (midPrice >= Math.min(...prices) && midPrice <= Math.max(...prices)) {
+            // Convert midPrice to X-axis position using linear interpolation
+            const minPrice = Math.min(...prices);
+            const maxPrice = Math.max(...prices);
+            const midX = margin.left + ((midPrice - minPrice) / (maxPrice - minPrice)) * plotWidth;
+    
+            // Draw a small tick on the X-axis
+            ctx.strokeStyle = 'blue';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(midX, canvas.height - margin.bottom + 5);
+            ctx.lineTo(midX, canvas.height - margin.bottom - 5);
+            ctx.stroke();
+    
+            // Label midprice below tick
+            ctx.fillStyle = 'blue';
+            ctx.font = '12px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText(midPrice.toFixed(2), midX, canvas.height - margin.bottom + 20);
+        }
+    
+        // Y-axis labels
         ctx.fillStyle = '#888';
         ctx.font = '10px Arial';
         ctx.textAlign = 'right';
         for (let i = 0; i <= 5; i++) {
-            const volume = Math.pow(10, (maxVolume * i / 5)).toFixed(2);
+            const volume = Math.pow(10, (maxVolume * i / 5)).toFixed(4);
             const y = canvas.height - margin.bottom - (plotHeight * i / 5);
             ctx.fillText(volume, margin.left - 5, y + 4);
         }
-        
+    
+        // X and Y axis titles
         ctx.fillStyle = '#888';
         ctx.font = '12px Arial';
         ctx.textAlign = 'center';
@@ -368,7 +393,7 @@ document.addEventListener('DOMContentLoaded', () => {
         ctx.save();
         ctx.translate(15, canvas.height / 2);
         ctx.rotate(-Math.PI / 2);
-        ctx.fillText('Volume (log scale)', 0, 0);
+        ctx.fillText('Vol (log)', 0, 0);
         ctx.restore();
     }
 
@@ -526,9 +551,9 @@ document.addEventListener('DOMContentLoaded', () => {
             const label = document.createElement('div');
             label.innerText = `Relative Tick Size: ${relativeTickSize.toFixed(6)}%`;
             // Use a valid position property; e.g., absolute
-            label.style.position = 'absolute';
+            label.style.position = 'relative';
             label.style.top = '5px';
-            label.style.right = '10px';
+            label.style.right = '-12px';
             label.style.backgroundColor = 'black';
             label.style.padding = '5px';
             label.style.color = 'white';
