@@ -77,7 +77,4 @@ This project is licensed under the **MIT License**.
 
 ---
 
-## Contact
-
-For inquiries, reach out to **Henry Wingrove** or open an issue on GitHub.
 
