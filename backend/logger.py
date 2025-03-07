@@ -203,12 +203,8 @@ class CoinbaseWebSocket:
         self.symbols = [s.replace('/', '-') for s in symbols]
         
         # Coinbase API credentials
-        self.api_key = "41c0a813-f1ec-46b0-80ff-599f7768477e"
-        self.private_key = """-----BEGIN EC PRIVATE KEY-----
-MHcCAQEEIGG8oqAvIXiilFoLFSSr72pwJS6rY8zOpAHTF/tGln2loAoGCCqGSM49
-AwEHoUQDQgAE5M0wFX4kDe9nDxpW1Y8UYmY/XDvEotgiwMlV6JLtYx3U/mvWH6vc
-LLOzwuu1/E37YppDp7wRN334b5vI/BRioA==
------END EC PRIVATE KEY-----"""
+        self.api_key = ""
+        self.private_key = ''
 
     def sign_message(self, timestamp, method, path, body=''):
         message = f'{timestamp}{method}{path}{body}'
